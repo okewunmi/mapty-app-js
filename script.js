@@ -95,6 +95,14 @@ class App {
   _newWorkout(e) {
     e.preventDefault();
 
+    //  get data from the form
+
+    // check if the data is valid
+
+    //  if the activity is running, create a running object
+
+    //  if the activity is cycling, create a cycling object
+
     // clearing the input fields
     inputElevation.value =
       inputDistance.value =
