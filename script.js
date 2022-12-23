@@ -21,6 +21,7 @@ class workout {
   }
 }
 class Running extends workout {
+  type = 'running';
   constructor(coords, distance, duration, cadence) {
     super(coords, distance, duration);
     this.cadence = cadence;
@@ -33,6 +34,7 @@ class Running extends workout {
   }
 }
 class Cycling extends workout {
+  type = 'cycling';
   constructor(coords, distance, duration, elevationGain) {
     super(coords, distance, duration);
     this.elevationGain = elevationGain;
@@ -130,27 +132,16 @@ class App {
         !allpositive(distance, duration)
       )
         return alert('input have to be POSSITIVE NUMBER');
-      workout = new Cycling([lat, lng], distance, duration, cadence);
+      workout = new Cycling([lat, lng], distance, duration, elevation);
     }
     //  add the new the object to the workout array
     this.#workout.push(workout);
-    // Render the woukout as the map as a maker
 
-    L.marker([lat, lng])
-      .addTo(this.#map)
-      .bindPopup(
-        L.popup({
-          maxWidth: 250,
-          minWidth: 100,
-          autoClose: false,
-          closeOnClick: false,
-          className: 'running-popup',
-        })
-      )
-      .setPopupContent('Workout')
-      .openPopup();
+    // Render the woukout as the map as a maker
+    this._newWorkout(workout);
 
     //  Rebder workout on list
+    this._renderWorkoutmarker(workout);
 
     // Hide form ++ clearing the input fields
     inputElevation.value =
@@ -159,6 +150,39 @@ class App {
       inputCadence.value =
         '';
     // Display the maker
+  }
+  _renderWorkoutmarker(workout) {
+    L.marker(workout.coords)
+      .addTo(this.#map)
+      .bindPopup(
+        L.popup({
+          maxWidth: 250,
+          minWidth: 100,
+          autoClose: false,
+          closeOnClick: false,
+          className: `${workout.type}-popup`,
+        })
+      )
+      .setPopupContent('workout')
+      .openPopup();
+  }
+  _renderWorkout(workout) {
+    const html = `
+    <li class="workout workout--${workout.name}" data-id="${workout.id}">
+          <h2 class="workout__title">Running on April 14</h2>
+          <div class="workout__details">
+            <span class="workout__icon">${
+              workout.name == 'running' ? '🏃‍♂️' : '🚴‍♀️'
+            }</span>
+            <span class="workout__value">${workout.distance}</span>
+            <span class="workout__unit">km</span>
+          </div>
+          <div class="workout__details">
+            <span class="workout__icon">⏱</span>
+            <span class="workout__value">${workout.duration}</span>
+            <span class="workout__unit">min</span>
+          </div>
+    `;
   }
 }
 const app = new App();
